@@ -24,7 +24,8 @@ STRING			\".+\"
 //			REGLAS
 %s comentarioLargo comentarioCorto
 %%
-"/*"                      {BEGIN(comentarioLargo);numeroLinea++;}
+
+"/*"                      {BEGIN(comentarioLargo);}
 <comentarioLargo>[^*]*    /* Sera ignorado */ 
 <comentarioLargo>"*"+[^*/]*    /* Sera ignorado */ 
 <comentarioLargo>"*/"     {BEGIN(INITIAL);numeroLinea++;}
