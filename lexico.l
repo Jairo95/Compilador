@@ -2,7 +2,11 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
-
+/*
+Integrantes:
+	Jairo Proaño
+	David Mejia
+*/
 int numeroLinea = 0;
 
 %}
