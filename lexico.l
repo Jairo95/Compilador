@@ -8,9 +8,12 @@ Integrantes:
 	David Mejia
 */
 int numeroLinea = 0;
-
+void escribirArchivo(char *);
+void concatenarArreglos(char *, char *);
+void main(int, char **);
+void generarError(char *, int, char *);
 %}
-//			DEFINICION DE PATRONES
+/*						DEFINICION DE PATRONES*/
 PALABRAS_RESERVADAS	(int)|(float)|(bool)|(char)|(string)|(if)|(then)|(else)|(while)|(do)|(input)|(output)|(return)
 CARACTERES_ESPECIALES	(",")|(";")|(":")|("(")|(")")|("[")|("]")|("{")|("}")|("+")|("-")|("*")|("/")|("<")|(">")|("=")|("!")|("&")|("$")
 OPERANDOS_COMPUESTOS	("<=")|(">=")|("==")|("!=")|("&&")|("||")
@@ -21,21 +24,20 @@ BOOL			(true)|(false)
 CHAR			\'.\'
 STRING			\".+\"
 
-//			REGLAS
+/*						REGLAS*/
 %s comentarioLargo comentarioCorto
 %%
-"/*"                      {BEGIN(comentarioLargo);numeroLinea++;}
-<comentarioLargo>[^*]*    /* Sera ignorado */ 
-<comentarioLargo>"*"+[^*/]*    /* Sera ignorado */ 
-<comentarioLargo>"*/"     {BEGIN(INITIAL);numeroLinea++;}
-
 "//"                     BEGIN(comentarioCorto);
-
-<comentarioCorto>[^\n]*  /*Sera ignorado*/; numeroLinea++;
+<comentarioCorto>[^\n]*  /*Sera ignorado*/;
 <comentarioCorto>\n      {BEGIN(INITIAL); numeroLinea++;}
 
+\n  { numeroLinea++;}
+"/*"                      {BEGIN(comentarioLargo);}
+<comentarioLargo>[^*\n]*    /* Sera ignorado */ 
+<comentarioLargo>"*"+[^*/\n]*    /* Sera ignorado */
+<comentarioLargo>"*/"   {BEGIN(INITIAL);}
 
-[0-9]+[a-zA-Z]+             {
+[0-9]+[a-zA-Z0-9]+             {
 printf("Error en la linea %d, token: %s\n", numeroLinea, yytext);
 char texto[] = "Error: ";
  generarError(texto, numeroLinea, yytext);
@@ -100,30 +102,29 @@ escribirArchivo(texto);
     concatenarArreglos(texto, yytext);
 escribirArchivo(texto);
 }
-\n  { numeroLinea++;}
-
 
 
 %%
 
-main(argc,argv)
+void main(argc,argv)
 int argc;
 char **argv;
 {
     ++argv,--argc;
     /* se salta el nombre del programa */
     int status;
-    // ELIMINAR EL ARCHIVO DE TOKENS SI EXISTE
+    /* ELIMINAR EL ARCHIVO DE TOKENS SI EXISTE*/
     status = remove("tokens.tk");
 
-    // LECTURA DE TOKENS POR UN ARCHIVO O TECLADO
+    /* LECTURA DE TOKENS POR UN ARCHIVO O TECLADO*/
     if ( argc > 0 )
 	yyin = fopen(argv[0], "r" );
     else
 	yyin = stdin;
     yylex();
+    printf("\n");
 }
-// SE AGREGAN LOS TOKENS AL FINAL DE LA LINEA      
+/* SE AGREGAN LOS TOKENS AL FINAL DE LA LINEA      */
 void escribirArchivo(char *texto){
     FILE *archivoSalida;
     archivoSalida = fopen("tokens.tk", "a");
