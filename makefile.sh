@@ -7,5 +7,6 @@
 #===============================================================================
 
 flex lexico.l
-gcc lex.yy.c -I. -lfl
+bison -d sintactico.y
+gcc lex.yy.c sintactico.tab.c -I. -lfl
 

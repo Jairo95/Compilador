@@ -2,20 +2,26 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
+#include<sintactico.tab.h>
 /*
 Integrantes:
 	Jairo Proaño
 	David Mejia
 */
+void yyeror(char *);
 int numeroLinea = 0;
 void escribirArchivo(char *);
 void concatenarArreglos(char *, char *);
-void main(int, char **);
+void lexico(int, char **);
 void generarError(char *, int, char *);
 %}
 /*						DEFINICION DE PATRONES*/
-PALABRAS_RESERVADAS	(int)|(float)|(bool)|(char)|(string)|(if)|(then)|(else)|(while)|(do)|(input)|(output)|(return)
-CARACTERES_ESPECIALES	(",")|(";")|(":")|("(")|(")")|("[")|("]")|("{")|("}")|("+")|("-")|("*")|("/")|("<")|(">")|("=")|("!")|("&")|("$")
+P_INT			int
+PALABRAS_RESERVADAS	(float)|(bool)|(char)|(string)|(if)|(then)|(else)|(while)|(do)|(input)|(output)|(return)
+
+C_PUNTOYCOMA		";"
+C_DOSPUNTOS		":"
+CARACTERES_ESPECIALES	(",")|("(")|(")")|("[")|("]")|("{")|("}")|("+")|("-")|("*")|("/")|("<")|(">")|("=")|("!")|("&")|("$")
 OPERANDOS_COMPUESTOS	("<=")|(">=")|("==")|("!=")|("&&")|("||")
 IDENTIFICADORES		[A-Za-z]+[A-Za-z0-9]*    			
 INT			[0-9]+
@@ -50,12 +56,39 @@ char texto[] = "Error: ";
 escribirArchivo(texto);
 }
 
+{P_INT}    {
+char texto[] = "P_INT: ";
+concatenarArreglos(texto, yytext);
+escribirArchivo(texto);
+return P_INT;
+}
+
 {PALABRAS_RESERVADAS}    {
 char texto[] = "PALABRA_RESERVADA: ";
 concatenarArreglos(texto, yytext);  
 escribirArchivo(texto);
 
 }
+
+
+{C_PUNTOYCOMA}   {
+char texto[] = "C_PUNTOYCOMA: ";
+ concatenarArreglos(texto, yytext);
+escribirArchivo(texto);
+return C_PUNTOYCOMA;
+}
+{C_DOSPUNTOS}   {
+char texto[] = "C_DOSPUNTOS: ";
+ concatenarArreglos(texto, yytext);
+escribirArchivo(texto);
+return C_DOSPUNTOS;
+}
+
+
+
+
+
+
 {CARACTERES_ESPECIALES}   {
 char texto[] = "CARACTER_ESPECIAL: ";
  concatenarArreglos(texto, yytext);
@@ -101,12 +134,13 @@ escribirArchivo(texto);
    char texto[] = "IDENTIFICADOR: ";
     concatenarArreglos(texto, yytext);
 escribirArchivo(texto);
+return IDENTIFICADOR;
 }
 
 
 %%
 
-void main(argc,argv)
+void lexico(argc,argv)
 int argc;
 char **argv;
 {
@@ -121,9 +155,9 @@ char **argv;
 	yyin = fopen(argv[0], "r" );
     else
 	yyin = stdin;
-    yylex();
     printf("\n");
 }
+
 /* SE AGREGAN LOS TOKENS AL FINAL DE LA LINEA      */
 void escribirArchivo(char *texto){
     FILE *archivoSalida;
@@ -145,3 +179,7 @@ void generarError(char *texto, int numeroLinea, char *valor){
     strcat(texto, valor);
     strcat(texto, "\n");
 }
+
+void yyerror(char *s) { 
+    fprintf(stderr, "%s\n", s); 
+} 
