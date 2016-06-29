@@ -1,10 +1,17 @@
+int:numero;
+0numero
+int:otro;
+0jd
+float:flotante;
+67fh67fhgg
+
 //comentario
 /*
 COMETARIO
 
 */
 // otro comentario
-67fh67fhgg
+
 /* otro mas 
  * */
 676d
@@ -16,7 +23,9 @@ int main(){
     //adasdkj
     #sdsdsd;
     79j;
-    int a= 5;
+    int:a;
+    int:b;
+    float:c;
     float l = 5.6;
     printf("Hola mundo\n");
     int b = a + a;

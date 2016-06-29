@@ -12,7 +12,7 @@ void yyeror(char *);
 int numeroLinea = 0;
 void escribirArchivo(char *);
 void concatenarArreglos(char *, char *);
-void lexico(int, char **);
+
 void generarError(char *, int, char *);
 %}
 /*						DEFINICION DE PATRONES*/
@@ -37,7 +37,8 @@ STRING			\".+\"
 <comentarioCorto>[^\n]*  /*Sera ignorado*/;
 <comentarioCorto>\n      {BEGIN(INITIAL); numeroLinea++;}
 
-\n  { numeroLinea++;}
+\n  { numeroLinea++;
+     return SALTO;}
 "/*"                      {BEGIN(comentarioLargo);}
 <comentarioLargo>[^*\n]*    /* Sera ignorado */ 
 <comentarioLargo>"*"+[^*/\n]*    /* Sera ignorado */
@@ -140,23 +141,6 @@ return IDENTIFICADOR;
 
 %%
 
-void lexico(argc,argv)
-int argc;
-char **argv;
-{
-    ++argv,--argc;
-    /* se salta el nombre del programa */
-    int status;
-    /* ELIMINAR EL ARCHIVO DE TOKENS SI EXISTE*/
-    status = remove("tokens.tk");
-
-    /* LECTURA DE TOKENS POR UN ARCHIVO O TECLADO*/
-    if ( argc > 0 )
-	yyin = fopen(argv[0], "r" );
-    else
-	yyin = stdin;
-    printf("\n");
-}
 
 /* SE AGREGAN LOS TOKENS AL FINAL DE LA LINEA      */
 void escribirArchivo(char *texto){
