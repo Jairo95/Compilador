@@ -3,7 +3,11 @@ int:numero;
 int:otro;
 0jd
 float:flotante;
+if(5<8)
 67fh67fhgg
+
+flotante=5.6;
+
 
 //comentario
 /*
