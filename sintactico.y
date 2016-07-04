@@ -39,16 +39,14 @@ extern int numeroLinea;
 %token C_PARENTESIS_A
 %token C_PARENTESIS_C
 %token C_IGUAL
-%token C_MAS
-%token C_MENOS
 %token C_COMA
 %token C_CORCHETE_A
 %token C_CORCHETE_C
-%token C_ASTERISCO
-%token C_SLASH
 %token C_EXCLAMACION
 %token C_Y
 %token C_DOLAR
+%left C_MAS C_MENOS
+%left C_ASTERISCO C_SLASH
 %start e
 %%
 e:
@@ -83,7 +81,15 @@ asignacion:	IDENTIFICADOR C_IGUAL expr  {;}
 definicion:	tipo_dato C_DOSPUNTOS IDENTIFICADOR               {;}
 		        ;
 
-condicional:   	P_IF C_PARENTESIS_A condicion C_PARENTESIS_C P_THEN bloque     {;}
+condicional:   	mif           {;}
+	|	vif           {;}
+	;
+
+mif:		P_IF C_PARENTESIS_A condicion C_PARENTESIS_C P_THEN mif P_ELSE mif  {;}
+	|	bloque                                                              {;}
+	;
+vif:		P_IF C_PARENTESIS_A condicion C_PARENTESIS_C P_THEN bloque             {;}
+	|	P_IF C_PARENTESIS_A condicion C_PARENTESIS_C P_THEN mif P_ELSE vif     {;}
 	;
 sentencia_dowhile:
 	|	P_DO bloque P_WHILE C_PARENTESIS_A condicion C_PARENTESIS_C     {;}
@@ -105,11 +111,11 @@ condicion:	condicion CONECTOR dato                           {;}
 	;
 
 expr:
-	|	C_PARENTESIS_A expr C_PARENTESIS_C                {;}
-	|	expr operacion C_PARENTESIS_A dato C_PARENTESIS_C {;}
-	|      	expr operacion dato                               {;}
-	|	dato                                              {;}
-	;
+	|  	C_PARENTESIS_A expr C_PARENTESIS_C                {;}
+	|	expr operacion expr  {;}
+	|	dato
+		;
+
 operacion:	C_MAS
 	|	C_MENOS
 	|	C_ASTERISCO

@@ -1,6 +1,16 @@
 int:numero;
 int:otro;
 float:flotante;
+if (true) then {
+
+} else {
+   
+ }
+
+if (true) then {
+
+
+	  }
 if(5<8) then {
   while(true) do {
     
