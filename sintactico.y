@@ -46,22 +46,36 @@ extern int numeroLinea;
 %token C_CORCHETE_C
 %token C_ASTERISCO
 %token C_SLASH
-%token C_MENORQUE
-%token C_MAYORQUE
 %token C_EXCLAMACION
 %token C_Y
 %token C_DOLAR
 %start e
 %%
-e:		e linea
+e:
+	|	comando_simple
+		;
+bloque:		C_LLAVE_A comando_simple C_LLAVE_C
+	;
+comando_simple:	comando_simple linea
 	|	linea
 		;
 
-linea:		condicional                   {printf("Condicional\n");}
+linea:		funcion                       {printf("Funcion\n");}
+	|	control_flujo                 {printf("Control flujo\n");}
 	|	asignacion C_PUNTOYCOMA       {printf("Asignacion variable\n");}
 	|	definicion C_PUNTOYCOMA       {printf("Definicion variable\n");}
+	|	retorno C_PUNTOYCOMA          {printf("Retorno\n");}
+	|	salida C_PUNTOYCOMA           {printf("Salida\n");} 
+	|	entrada C_PUNTOYCOMA          {printf("Entrada\n");}
 	|	SALTO                         {;}
 		;
+control_flujo:	sentencia_while
+	|	sentencia_dowhile C_PUNTOYCOMA
+	|	condicional
+	;
+
+funcion:	tipo_dato C_DOSPUNTOS IDENTIFICADOR C_CORCHETE_A lista_parametros C_CORCHETE_C bloque
+	;
 
 asignacion:	IDENTIFICADOR C_IGUAL expr  {;}
 	;
@@ -69,21 +83,38 @@ asignacion:	IDENTIFICADOR C_IGUAL expr  {;}
 definicion:	tipo_dato C_DOSPUNTOS IDENTIFICADOR               {;}
 		        ;
 
-condicional:   	P_IF C_PARENTESIS_A condicion C_PARENTESIS_C      {;}
+condicional:   	P_IF C_PARENTESIS_A condicion C_PARENTESIS_C P_THEN bloque     {;}
+	;
+sentencia_dowhile:
+	|	P_DO bloque P_WHILE C_PARENTESIS_A condicion C_PARENTESIS_C     {;}
 	;
 
+sentencia_while:
+		P_WHILE C_PARENTESIS_A condicion C_PARENTESIS_C P_DO bloque    {;}
+	;
 
+lista_parametros:
+	|	lista_parametros C_COMA definicion
+	|	definicion
+	|	' '
+	;
 
 condicion:	condicion CONECTOR dato                           {;}
 	|	dato COMPARADOR dato                              {;}
 	|	BOOL
 	;
 
-expr:		expr C_MAS dato               {;}
-	|	expr C_MENOS dato             {;}
-	|	dato                          {;}
+expr:
+	|	C_PARENTESIS_A expr C_PARENTESIS_C                {;}
+	|	expr operacion C_PARENTESIS_A dato C_PARENTESIS_C {;}
+	|      	expr operacion dato                               {;}
+	|	dato                                              {;}
 	;
-
+operacion:	C_MAS
+	|	C_MENOS
+	|	C_ASTERISCO
+	|	C_SLASH
+	;
 
 dato:		IDENTIFICADOR
 	|       numero
@@ -98,7 +129,12 @@ tipo_dato:	P_CHAR
 	|	P_FLOAT
 	;
 
-
+salida:		P_OUTPUT STRING
+	;
+entrada:	P_INPUT
+	;
+retorno:	P_RETURN dato
+	;
 
 
 %%

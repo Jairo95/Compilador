@@ -1,14 +1,21 @@
 int:numero;
-0numero
 int:otro;
-0jd
 float:flotante;
-if(5<8)
-67fh67fhgg
+if(5<8) then {
+  while(true) do {
+    
+  }
+}
 
-flotante=5.6;
+int:funcion[int:param1, int:param2] {
+  output "ingrese dato: ";
+  input;
+  return 0;
 
+}
+g = 5;
 
+h:sd;
 //comentario
 /*
 COMETARIO

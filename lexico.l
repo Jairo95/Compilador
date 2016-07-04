@@ -326,23 +326,25 @@ return INT;
 char texto[] = "FLOTANTE:";
     concatenarArreglos(texto, yytext);
 escribirArchivo(texto);
-
+return FLOAT;
 }
 {BOOL}                    {
 char texto[] = "BOOLEAN: ";
     concatenarArreglos(texto, yytext);
 escribirArchivo(texto);
+ return BOOL;
 }
 {CHAR}            {
 char texto[] = "CARACTER: ";
     concatenarArreglos(texto, yytext);
 escribirArchivo(texto);
-
+return CHAR;
 }
 {STRING}                  {
 char texto[] = "STRING: ";
     concatenarArreglos(texto, yytext);
 escribirArchivo(texto);
+ return STRING;
 }
 {IDENTIFICADORES}      {
    char texto[] = "IDENTIFICADOR: ";
