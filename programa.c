@@ -25,7 +25,7 @@ int:funcion[int:param1, int:param2] {
 }
 g = 5;
 
-h:sd;
+char:sd;
 //comentario
 /*
 COMETARIO
@@ -35,10 +35,9 @@ COMETARIO
 
 /* otro mas 
  * */
-676d
 // COMETARIO CORTO
 /* jshds*/
-int main(){
+int:main[]{
     //8786767dfgdgfh ;
     .#sdsdh899u7hjh;
     //adasdkj

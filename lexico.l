@@ -84,49 +84,59 @@ escribirArchivo(texto);
 }
 
 {P_INT}    {
-char texto[] = "P_INT: ";
-concatenarArreglos(texto, yytext);
-escribirArchivo(texto);
-return P_INT;
+    char texto[] = "P_INT: ";
+    concatenarArreglos(texto, yytext);
+    escribirArchivo(texto);
+    
+    yylval.tipoDato = yytext;
+    printf("%s\n",yylval.tipoDato);
+    return P_INT;
 }
 
 {P_FLOAT}   {
-char texto[] = "P_FLOAT: ";
-concatenarArreglos(texto, yytext);
-escribirArchivo(texto);
-return P_FLOAT;
+    char texto[] = "P_FLOAT: ";
+    concatenarArreglos(texto, yytext);
+    escribirArchivo(texto);
+    yylval.tipoDato = yytext;
+    printf("%s\n",yylval.tipoDato);
+    return P_FLOAT;
 }
 
 
 {P_IF}   {
-char texto[] = "P_IF: ";
-concatenarArreglos(texto, yytext);
-escribirArchivo(texto);
-return P_IF;
+    char texto[] = "P_IF: ";
+    concatenarArreglos(texto, yytext);
+    escribirArchivo(texto);
+    return P_IF;
 }
 
 
 {P_BOOL}   {
-char texto[] = "P_BOOL: ";
-concatenarArreglos(texto, yytext);
-escribirArchivo(texto);
-return P_BOOL;
+    char texto[] = "P_BOOL: ";
+    concatenarArreglos(texto, yytext);
+    escribirArchivo(texto);
+    yylval.tipoDato = yytext;
+    return P_BOOL;
 }
 
 
 {P_CHAR}   {
-char texto[] = "P_CHAR: ";
-concatenarArreglos(texto, yytext);
-escribirArchivo(texto);
-return P_CHAR;
+    char texto[] = "P_CHAR: ";
+    concatenarArreglos(texto, yytext);
+    escribirArchivo(texto);
+    yylval.tipoDato = yytext;
+    printf("%s\n", yylval.tipoDato);
+    return P_CHAR;
 }
 
 
 {P_STRING}   {
-char texto[] = "P_STRING: ";
-concatenarArreglos(texto, yytext);
-escribirArchivo(texto);
-return P_STRING;
+    char texto[] = "P_STRING: ";
+    concatenarArreglos(texto, yytext);
+    escribirArchivo(texto);
+    yylval.tipoDato = yytext;
+    printf("$s\n", yylval.tipoDato);
+    return P_STRING;
 }
 
 
@@ -320,6 +330,7 @@ return CONECTOR;
 char texto[] = "ENTERO: ";
     concatenarArreglos(texto, yytext);
 escribirArchivo(texto);
+ 
 return INT;
 }
 {FLOAT}                   {

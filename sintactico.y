@@ -1,6 +1,8 @@
 %{
 #include<stdio.h>
 #include<stdlib.h>
+
+FILE *archivoSalida;
 int main(int, char **);
 extern int yylex();
 extern void yyerror(char *);
@@ -8,22 +10,31 @@ extern FILE *yyin;
 
 extern int numeroLinea;
 %}
-%token IDENTIFICADOR
+
+%union{
+    char *tipoDato;
+    char *identificador;
+    double dValor;
+    int iValor;
+    char cValor;
+    char *sValor;
+}
+
 %token COMPARADOR
 %token CONECTOR
 %token SALTO			
-%token INT
-%token FLOAT
-%token BOOL
-%token CHAR
-%token STRING
+%token	<iValor> INT
+%token	<dValor> FLOAT
+%token	<sValor> BOOL
+%token	<cValor> CHAR 
+%token	<sValor> STRING
 
 %token P_IF			
-%token P_FLOAT
-%token P_BOOL
-%token P_CHAR
-%token P_STRING
-%token P_INT
+%token	<tipoDato> P_FLOAT
+%token	<tipoDato> P_BOOL
+%token	<tipoDato> P_CHAR
+%token	<tipoDato> P_STRING
+%token	<tipoDato> P_INT
 %token P_THEN
 %token P_ELSE
 %token P_WHILE
@@ -47,6 +58,10 @@ extern int numeroLinea;
 %token C_DOLAR
 %left C_MAS C_MENOS
 %left C_ASTERISCO C_SLASH
+			
+%type	<tipoDato> tipo_dato
+%token	<identificador>	IDENTIFICADOR
+			
 %start e
 %%
 e:
@@ -58,13 +73,23 @@ comando_simple:	comando_simple linea
 	|	linea
 		;
 
-linea:		funcion                       {printf("Funcion\n");}
-	|	control_flujo                 {printf("Control flujo\n");}
-	|	asignacion C_PUNTOYCOMA       {printf("Asignacion variable\n");}
-	|	definicion C_PUNTOYCOMA       {printf("Definicion variable\n");}
-	|	retorno C_PUNTOYCOMA          {printf("Retorno\n");}
-	|	salida C_PUNTOYCOMA           {printf("Salida\n");} 
-	|	entrada C_PUNTOYCOMA          {printf("Entrada\n");}
+linea:		funcion                       {
+
+ }
+	|	control_flujo                 {
+		}
+	    |	asignacion C_PUNTOYCOMA       {
+
+     }
+|	definicion C_PUNTOYCOMA       {
+
+     }
+	|	retorno C_PUNTOYCOMA          {
+     }
+	 |	salida C_PUNTOYCOMA           {
+	 } 
+	     |	entrada C_PUNTOYCOMA          {
+}
 	|	SALTO                         {;}
 		;
 control_flujo:	sentencia_while
@@ -78,7 +103,8 @@ funcion:	tipo_dato C_DOSPUNTOS IDENTIFICADOR C_CORCHETE_A lista_parametros C_COR
 asignacion:	IDENTIFICADOR C_IGUAL expr  {;}
 	;
 
-definicion:	tipo_dato C_DOSPUNTOS IDENTIFICADOR               {;}
+definicion:	tipo_dato C_DOSPUNTOS IDENTIFICADOR    {printf("Definicion Sintactico: %s\n", $1);
+		    ;}
 		        ;
 
 condicional:   	mif           {;}
@@ -128,11 +154,11 @@ dato:		IDENTIFICADOR
 numero:		INT
 	|	FLOAT
 	;
-tipo_dato:	P_CHAR
-	|	P_STRING
-	|	P_BOOL
-	|	P_INT
-	|	P_FLOAT
+tipo_dato:	P_CHAR         {$$ = $1;}
+	|	P_STRING        {$$ = $1;}
+	|	P_BOOL        {$$ = $1;}
+	|	P_INT        {$$ = $1;}
+	|	P_FLOAT        {$$ = $1;}
 	;
 
 salida:		P_OUTPUT STRING
@@ -150,11 +176,19 @@ int main(argc,argv)
 int argc;
 char **argv;
 {
+
+    int status;
+     
+     status = remove("tabla.tk");
+    archivoSalida = fopen("tabla.tk", "a");
+    
+    
     ++argv,--argc;
     /* se salta el nombre del programa */
-    int status;
+    
     /* ELIMINAR EL ARCHIVO DE TOKENS SI EXISTE*/
     status = remove("tokens.tk");
+    
 
     /* LECTURA DE TOKENS POR UN ARCHIVO O TECLADO*/
     if ( argc > 0 )
@@ -164,5 +198,11 @@ char **argv;
     int err = yyparse();
     nextToken = yylex();
     printf("\n");
+    fclose(archivoSalida);
     return 0;
+}
+
+
+void insertarTablaSimbolos(char *tipoDato, char *identificador, char *dato) {
+
 }
