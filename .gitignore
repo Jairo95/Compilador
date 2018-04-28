@@ -1,0 +1,7 @@
+*.txt
+*.o
+analizador
+lex.yy.c
+sintactico.output
+*.tab.c
+*.tab.h
